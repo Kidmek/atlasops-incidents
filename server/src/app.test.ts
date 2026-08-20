@@ -32,6 +32,22 @@ describe("AtlasOps mock API", () => {
     expect(response.headers["x-powered-by"]).toBeUndefined();
   });
 
+  it("serves the OpenAPI document and Swagger UI", async () => {
+    const specificationResponse = await request(app).get("/api/openapi.json");
+    const documentationResponse = await request(app).get("/api/docs/");
+
+    expect(specificationResponse.status).toBe(200);
+    expect(specificationResponse.body).toMatchObject({
+      openapi: "3.0.3",
+      info: { title: "AtlasOps Mock Incident API" },
+    });
+    expect(specificationResponse.body.paths).toHaveProperty("/incidents");
+    expect(documentationResponse.status).toBe(200);
+    expect(documentationResponse.text).toContain(
+      "<title>AtlasOps API documentation</title>"
+    );
+  });
+
   it("returns a paginated incident list", async () => {
     const response = await request(buildTestApp(1_043)).get(
       "/api/incidents?page=1&pageSize=25"

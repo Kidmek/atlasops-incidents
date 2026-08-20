@@ -1,4 +1,5 @@
 import express from "express";
+import swaggerUi from "swagger-ui-express";
 
 import { incidentStore, type IncidentStore } from "./data/incident-store.js";
 import { createMockBehaviorMiddleware } from "./middleware/mock-behavior.js";
@@ -8,6 +9,7 @@ import {
 } from "./middleware/error-handler.js";
 import { createApiRouter } from "./routes/api-router.js";
 import { IncidentService } from "./services/incident-service.js";
+import { openApiDocument } from "./openapi.js";
 
 interface CreateAppOptions {
   store?: IncidentStore;
@@ -45,6 +47,17 @@ export function createApp(options: CreateAppOptions = {}) {
       status: "ok",
     });
   });
+
+  app.get("/api/openapi.json", (_request, response) => {
+    response.json(openApiDocument);
+  });
+  app.use(
+    "/api/docs",
+    swaggerUi.serve,
+    swaggerUi.setup(openApiDocument, {
+      customSiteTitle: "AtlasOps API documentation",
+    })
+  );
 
   app.use(
     "/api",
