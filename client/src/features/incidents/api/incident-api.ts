@@ -1,3 +1,5 @@
+import { toApiError } from "@/shared/api/api-error";
+
 import { incidentListResponseSchema } from "../schemas/incident-list.schema";
 import type {
   IncidentListParams,
@@ -36,7 +38,7 @@ export async function getIncidents(
   });
 
   if (!response.ok) {
-    throw new Error(`Unable to load incidents (${response.status}).`);
+    throw await toApiError(response);
   }
 
   const data: unknown = await response.json();

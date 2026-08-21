@@ -42,3 +42,14 @@ export const incidentSchema = z.object({
   notes: z.array(incidentNoteSchema),
   version: z.number().int().positive(),
 });
+
+/**
+ * PATCH /incidents/:id/status returns only the changed fields, not a full
+ * incident, so the shape is derived from incidentSchema instead of reusing it.
+ */
+export const incidentStatusUpdateSchema = incidentSchema.pick({
+  id: true,
+  status: true,
+  updatedAt: true,
+  version: true,
+});
