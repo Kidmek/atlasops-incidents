@@ -1,6 +1,9 @@
 import { toApiError } from "@/shared/api/api-error";
 
-import { incidentListResponseSchema } from "../schemas/incident-list.schema";
+import {
+  incidentListResponseSchema,
+  servicesResponseSchema,
+} from "../schemas/incident-list.schema";
 import type {
   IncidentListParams,
   IncidentListResponse,
@@ -44,4 +47,16 @@ export async function getIncidents(
   const data: unknown = await response.json();
 
   return incidentListResponseSchema.parse(data);
+}
+
+export async function getServices(): Promise<string[]> {
+  const response = await fetch("/api/incidents/services");
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  const data: unknown = await response.json();
+
+  return servicesResponseSchema.parse(data).items;
 }

@@ -1,67 +1,109 @@
+import { useMemo } from "react";
+
+import { ApiError } from "@/shared/api/api-error";
+import { Button } from "@/shared/ui/atoms/Button";
+import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
+
+import { IncidentTable } from "../components/IncidentTable";
 import { useIncidentListParams } from "../hooks/useIncidentListParams";
 import { useIncidentsQuery } from "../hooks/useIncidentsQuery";
+import { IncidentFilters } from "../components/IncidentFilters";
+import { Pagination } from "@/shared/ui/molecules/Pagination";
 
 export function IncidentListPage() {
-  const params = useIncidentListParams();
-  const incidentsQuery = useIncidentsQuery(params);
+  const { params, setParams, hasActiveFilters, clearFilters } =
+    useIncidentListParams();
+  const debouncedSearch = useDebouncedValue(params.q, 300);
+
+  const queryParams = useMemo(
+    () => ({ ...params, q: debouncedSearch }),
+    [params, debouncedSearch]
+  );
+
+  const incidentsQuery = useIncidentsQuery(queryParams);
 
   return (
     <div className="space-y-6">
       <header>
-        <p className="text-sm font-medium text-slate-500">Operations</p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-          Incidents
-        </h1>
-        <p className="mt-2 text-sm text-slate-600">
+        <h1 className="text-2xl font-semibold tracking-tight">Incidents</h1>
+        <p className="mt-1 text-sm text-foreground-muted">
           Monitor, prioritize, and manage service incidents.
         </p>
       </header>
 
-      <section aria-label="Incident list">
-        {incidentsQuery.isPending && (
-          <p className="text-sm text-slate-600">Loading incidents…</p>
-        )}
+      <IncidentFilters
+        params={params}
+        setParams={setParams}
+        hasActiveFilters={hasActiveFilters}
+        clearFilters={clearFilters}
+      />
 
+      <section aria-label="Incident list" className="space-y-3">
         {incidentsQuery.isError && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-700">
-              {incidentsQuery.error.message}
+          <div
+            role="alert"
+            className="rounded-panel border border-danger-border bg-danger-subtle p-4"
+          >
+            <p className="text-sm text-danger">
+              {incidentsQuery.error instanceof ApiError
+                ? incidentsQuery.error.message
+                : "Incidents could not be loaded. Check your connection."}
             </p>
 
-            <button
-              type="button"
-              className="mt-3 text-sm font-medium text-red-700 underline"
+            <Button
+              size="sm"
+              className="mt-3"
               onClick={() => void incidentsQuery.refetch()}
             >
               Try again
-            </button>
+            </Button>
           </div>
         )}
 
-        {incidentsQuery.isSuccess && incidentsQuery.data.items.length === 0 && (
-          <p className="text-sm text-slate-600">No incidents found.</p>
-        )}
+        {incidentsQuery.isPending && <IncidentTable incidents={[]} isLoading />}
 
-        {incidentsQuery.isSuccess && incidentsQuery.data.items.length > 0 && (
-          <div className="space-y-3">
-            <p className="text-sm text-slate-600">
-              {incidentsQuery.data.total} incidents
+        {incidentsQuery.data && (
+          <>
+            <p aria-live="polite" className="text-sm text-foreground-muted">
+              {incidentsQuery.data.total} incident
+              {incidentsQuery.data.total === 1 ? "" : "s"}
+              {incidentsQuery.isFetching && " · refreshing…"}
             </p>
 
-            <ul className="divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white">
-              {incidentsQuery.data.items.map((incident) => (
-                <li key={incident.id} className="p-4">
-                  <h2 className="font-medium text-slate-950">
-                    {incident.title}
-                  </h2>
+            {incidentsQuery.data.items.length === 0 ? (
+              <div className="rounded-panel border border-border bg-surface p-8 text-center">
+                <p className="text-sm font-medium">
+                  {hasActiveFilters
+                    ? "No incidents match these filters."
+                    : "No incidents yet."}
+                </p>
 
-                  <p className="mt-1 text-sm text-slate-600">
-                    {incident.service} · {incident.severity} · {incident.status}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
+                {hasActiveFilters && (
+                  <Button size="sm" className="mt-3" onClick={clearFilters}>
+                    Clear filters
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <>
+                <div
+                  aria-busy={incidentsQuery.isPlaceholderData}
+                  className={
+                    incidentsQuery.isPlaceholderData ? "opacity-60" : undefined
+                  }
+                >
+                  <IncidentTable incidents={incidentsQuery.data.items} />
+                </div>
+                <Pagination
+                  page={incidentsQuery.data.page}
+                  pageSize={incidentsQuery.data.pageSize}
+                  total={incidentsQuery.data.total}
+                  totalPages={incidentsQuery.data.totalPages}
+                  onPageChange={(page) => setParams({ page })}
+                />
+              </>
+            )}
+          </>
         )}
       </section>
     </div>

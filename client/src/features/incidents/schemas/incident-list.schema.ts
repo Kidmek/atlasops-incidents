@@ -27,3 +27,5 @@ export const incidentListParamsSchema = z.object({
   page: z.coerce.number().int().min(1).default(1).catch(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(25).catch(25),
 });
+
+export const servicesResponseSchema = z.object({ items: z.array(z.string()) });
