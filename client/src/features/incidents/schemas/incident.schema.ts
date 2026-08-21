@@ -43,13 +43,26 @@ export const incidentSchema = z.object({
   version: z.number().int().positive(),
 });
 
-/**
- * PATCH /incidents/:id/status returns only the changed fields, not a full
- * incident, so the shape is derived from incidentSchema instead of reusing it.
- */
 export const incidentStatusUpdateSchema = incidentSchema.pick({
   id: true,
   status: true,
   updatedAt: true,
   version: true,
+});
+
+export const createIncidentSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(5, "Title must contain at least 5 characters.")
+    .max(120, "Title must contain at most 120 characters."),
+  description: z
+    .string()
+    .trim()
+    .min(20, "Description must contain at least 20 characters.")
+    .max(2000, "Description must contain at most 2,000 characters."),
+  severity: incidentSeveritySchema,
+  service: z.string().min(1, "Select a service."),
+  assigneeId: z.string(),
+  status: incidentStatusSchema,
 });

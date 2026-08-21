@@ -9,6 +9,7 @@ import { useIncidentListParams } from "../hooks/useIncidentListParams";
 import { useIncidentsQuery } from "../hooks/useIncidentsQuery";
 import { IncidentFilters } from "../components/IncidentFilters";
 import { Pagination } from "@/shared/ui/molecules/Pagination";
+import { Link } from "react-router";
 
 export function IncidentListPage() {
   const { params, setParams, hasActiveFilters, clearFilters } =
@@ -24,11 +25,19 @@ export function IncidentListPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Incidents</h1>
-        <p className="mt-1 text-sm text-foreground-muted">
-          Monitor, prioritize, and manage service incidents.
-        </p>
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Incidents</h1>
+          <p className="mt-1 text-sm text-foreground-muted">
+            Monitor, prioritize, and manage service incidents.
+          </p>
+        </div>
+        <Link
+          to="/incidents/new"
+          className="inline-flex h-10 items-center rounded-control bg-primary px-4 text-sm font-medium text-foreground-inverse hover:bg-primary-hover"
+        >
+          New incident
+        </Link>
       </header>
 
       <IncidentFilters />

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   addIncidentNote,
   assignIncident,
+  createIncident,
   updateIncidentStatus,
 } from "../api/incident-api";
 import { incidentQueryKeys } from "../api/incident-query-keys";
@@ -17,6 +18,18 @@ const CURRENT_USER: UserSummary = {
   name: "Alex Morgan",
   email: "alex.morgan@example.com",
 };
+
+export function useCreateIncident() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createIncident,
+    onSuccess: (incident) => {
+      queryClient.setQueryData(incidentQueryKeys.detail(incident.id), incident);
+      void queryClient.invalidateQueries({ queryKey: incidentQueryKeys.lists });
+    },
+  });
+}
 
 export function useUpdateIncidentStatus(incidentId: string) {
   const queryClient = useQueryClient();

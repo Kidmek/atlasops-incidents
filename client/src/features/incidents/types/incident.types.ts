@@ -6,6 +6,7 @@ import type {
   incidentSeveritySchema,
   incidentStatusSchema,
   incidentStatusUpdateSchema,
+  createIncidentSchema,
   userSummarySchema,
 } from "../schemas/incident.schema";
 
@@ -15,3 +16,4 @@ export type UserSummary = z.infer<typeof userSummarySchema>;
 export type IncidentNote = z.infer<typeof incidentNoteSchema>;
 export type Incident = z.infer<typeof incidentSchema>;
 export type IncidentStatusUpdate = z.infer<typeof incidentStatusUpdateSchema>;
+export type CreateIncident = z.infer<typeof createIncidentSchema>;

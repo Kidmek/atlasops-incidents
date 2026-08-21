@@ -15,6 +15,7 @@ import {
   incidentNoteSchema,
 } from "../schemas/incident.schema";
 import type {
+  CreateIncident,
   Incident,
   IncidentNote,
   IncidentStatus,
@@ -172,4 +173,24 @@ export async function addIncidentNote(
   const data: unknown = await response.json();
 
   return incidentNoteSchema.parse(data);
+}
+
+export async function createIncident(input: CreateIncident): Promise<Incident> {
+  const response = await fetch("/api/incidents", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ...input,
+      // The form uses "" for unassigned; the server wants null.
+      assigneeId: input.assigneeId || null,
+    }),
+  });
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  const data: unknown = await response.json();
+
+  return incidentSchema.parse(data);
 }
