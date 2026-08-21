@@ -1,6 +1,7 @@
 import { Navigate, Routes, Route } from "react-router";
 import { IncidentListPage } from "@/features/incidents/pages/IncidentListPage";
 import { AppLayout } from "@/app/layouts/AppLayout";
+import { IncidentDetailPage } from "@/features/incidents/pages/IncidentDetailPage";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Route element={<AppLayout />}>
         <Route index element={<Navigate to="/incidents" replace />} />
         <Route path="incidents" element={<IncidentListPage />} />
+        <Route path="incidents/:incidentId" element={<IncidentDetailPage />} />
       </Route>
     </Routes>
   );

@@ -8,6 +8,8 @@ import type {
   IncidentListParams,
   IncidentListResponse,
 } from "../types/incident-list.types";
+import { incidentSchema } from "../schemas/incident.schema";
+import type { Incident } from "../types/incident.types";
 
 export async function getIncidents(
   params: IncidentListParams,
@@ -59,4 +61,23 @@ export async function getServices(): Promise<string[]> {
   const data: unknown = await response.json();
 
   return servicesResponseSchema.parse(data).items;
+}
+
+export async function getIncident(
+  incidentId: string,
+  signal?: AbortSignal
+): Promise<Incident> {
+  // The id comes from the route, so it is encoded before it reaches the URL.
+  const response = await fetch(
+    `/api/incidents/${encodeURIComponent(incidentId)}`,
+    { signal }
+  );
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  const data: unknown = await response.json();
+
+  return incidentSchema.parse(data);
 }

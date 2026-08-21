@@ -3,32 +3,12 @@ import { Link } from "react-router";
 import { Badge } from "@/shared/ui/atoms/Badge";
 import { formatRelativeTime } from "@/shared/lib/date";
 
-import type {
-  Incident,
-  IncidentSeverity,
-  IncidentStatus,
-} from "../types/incident.types";
+import type { Incident } from "../types/incident.types";
 import { INCIDENT_TABLE_COLUMNS } from "./incident-table-columns";
 import { Skeleton } from "@/shared/ui/atoms/Skeleton";
 import { useIncidentListParams } from "../hooks/useIncidentListParams";
 import type { IncidentSortField } from "../types/incident-list.types";
-
-const STATUS_TONE: Record<
-  IncidentStatus,
-  "danger" | "warning" | "info" | "success"
-> = {
-  triggered: "danger",
-  acknowledged: "warning",
-  investigating: "info",
-  resolved: "success",
-};
-
-const SEVERITY_DOT: Record<IncidentSeverity, string> = {
-  critical: "bg-severity-critical",
-  high: "bg-severity-high",
-  medium: "bg-severity-medium",
-  low: "bg-severity-low",
-};
+import { STATUS_TONE, SEVERITY_DOT } from "./incident-display";
 
 export function IncidentTable({
   incidents,
@@ -57,6 +37,7 @@ export function IncidentTable({
           <col className="w-36" />
           <col className="w-40" />
           <col className="w-40" />
+          <col className="w-32" />
           <col className="w-32" />
         </colgroup>
 
@@ -127,6 +108,7 @@ export function IncidentTable({
 
                   <td className="px-3 py-2.5 font-medium">
                     <Link
+                      state={{ from: location.search }}
                       to={incident.id}
                       className="block truncate hover:underline"
                     >

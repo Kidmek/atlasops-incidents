@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 
 import { cn } from "@/shared/lib/cn";
 
-type BadgeTone = "neutral" | "info" | "success" | "warning" | "danger";
+export type BadgeTone = "neutral" | "info" | "success" | "warning" | "danger";
 
 const TONE_CLASSES: Record<BadgeTone, string> = {
   neutral: "border-border-strong bg-surface-subtle text-foreground-muted",
