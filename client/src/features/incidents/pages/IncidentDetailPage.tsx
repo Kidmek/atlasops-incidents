@@ -8,6 +8,7 @@ import { formatRelativeTime } from "@/shared/lib/date";
 
 import { useIncidentQuery } from "../hooks/useIncidentsQuery";
 import { STATUS_TONE, SEVERITY_TONE } from "../components/incident-display";
+import { IncidentStatusControl } from "../components/IncidentStatusControl";
 
 export function IncidentDetailPage() {
   const { incidentId = "" } = useParams();
@@ -92,6 +93,8 @@ export function IncidentDetailPage() {
               </Badge>
             </div>
           </header>
+
+          <IncidentStatusControl incident={incidentQuery.data} />
 
           <dl className="grid grid-cols-1 gap-4 rounded-panel border border-border bg-surface p-4 shadow-panel sm:grid-cols-2 lg:grid-cols-4">
             <div>

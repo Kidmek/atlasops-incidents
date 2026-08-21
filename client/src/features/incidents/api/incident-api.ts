@@ -8,8 +8,15 @@ import type {
   IncidentListParams,
   IncidentListResponse,
 } from "../types/incident-list.types";
-import { incidentSchema } from "../schemas/incident.schema";
-import type { Incident } from "../types/incident.types";
+import {
+  incidentSchema,
+  incidentStatusUpdateSchema,
+} from "../schemas/incident.schema";
+import type {
+  Incident,
+  IncidentStatus,
+  IncidentStatusUpdate,
+} from "../types/incident.types";
 
 export async function getIncidents(
   params: IncidentListParams,
@@ -80,4 +87,29 @@ export async function getIncident(
   const data: unknown = await response.json();
 
   return incidentSchema.parse(data);
+}
+
+export async function updateIncidentStatus(
+  incidentId: string,
+  input: {
+    status: IncidentStatus;
+    version: number;
+  }
+): Promise<IncidentStatusUpdate> {
+  const response = await fetch(
+    `/api/incidents/${encodeURIComponent(incidentId)}/status`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    }
+  );
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  const data: unknown = await response.json();
+
+  return incidentStatusUpdateSchema.parse(data);
 }
