@@ -9,7 +9,7 @@ import {
   incidentSeveritySchema,
   incidentStatusSchema,
 } from "../schemas/incident.schema";
-import type { IncidentListParams } from "../types/incident-list.types";
+import { useIncidentListParams } from "../hooks/useIncidentListParams";
 
 // Taken from the schemas so the filter options can never drift from the
 // values the API actually accepts.
@@ -22,19 +22,9 @@ function toggleValue<T>(values: T[], value: T): T[] {
     : [...values, value];
 }
 
-interface IncidentFiltersProps {
-  params: IncidentListParams;
-  setParams: (patch: Partial<IncidentListParams>) => void;
-  hasActiveFilters: boolean;
-  clearFilters: () => void;
-}
-
-export function IncidentFilters({
-  params,
-  setParams,
-  hasActiveFilters,
-  clearFilters,
-}: IncidentFiltersProps) {
+export function IncidentFilters() {
+  const { params, setParams, hasActiveFilters, clearFilters } =
+    useIncidentListParams();
   const servicesQuery = useServicesQuery();
 
   return (

@@ -14,7 +14,7 @@ export function useIncidentsQuery(params: IncidentListParams) {
 
 export function useServicesQuery() {
   return useQuery({
-    queryKey: [],
+    queryKey: ["services"],
     queryFn: () => getServices(),
     staleTime: Infinity,
   });

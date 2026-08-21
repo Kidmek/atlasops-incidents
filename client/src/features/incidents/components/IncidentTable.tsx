@@ -10,6 +10,8 @@ import type {
 } from "../types/incident.types";
 import { INCIDENT_TABLE_COLUMNS } from "./incident-table-columns";
 import { Skeleton } from "@/shared/ui/atoms/Skeleton";
+import { useIncidentListParams } from "../hooks/useIncidentListParams";
+import type { IncidentSortField } from "../types/incident-list.types";
 
 const STATUS_TONE: Record<
   IncidentStatus,
@@ -35,6 +37,14 @@ export function IncidentTable({
   incidents: Incident[];
   isLoading?: boolean;
 }) {
+  const { params, setParams } = useIncidentListParams();
+
+  const handleSort = (field: IncidentSortField) =>
+    setParams({
+      sort: field,
+      order: params.sort === field && params.order === "desc" ? "asc" : "desc",
+    });
+
   return (
     <div className="rounded-panel border border-border bg-surface shadow-panel">
       <table className="w-full table-fixed border-collapse text-left text-sm">
@@ -52,11 +62,46 @@ export function IncidentTable({
 
         <thead className="bg-surface-subtle text-foreground-muted">
           <tr>
-            {INCIDENT_TABLE_COLUMNS.map((column) => (
-              <th key={column.key} scope="col" className="px-3 py-2">
-                {column.label}
-              </th>
-            ))}
+            {INCIDENT_TABLE_COLUMNS.map((column) => {
+              const sortField =
+                "sortField" in column ? column.sortField : undefined;
+
+              if (sortField === undefined) {
+                return (
+                  <th key={column.key} scope="col" className="px-3 py-2">
+                    {column.label}
+                  </th>
+                );
+              }
+
+              const isActive = params.sort === sortField;
+
+              return (
+                <th
+                  key={column.key}
+                  scope="col"
+                  aria-sort={
+                    isActive
+                      ? params.order === "asc"
+                        ? "ascending"
+                        : "descending"
+                      : "none"
+                  }
+                  className="px-3 py-2"
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleSort(sortField)}
+                    className="inline-flex items-center gap-1 hover:text-foreground"
+                  >
+                    {column.label}
+                    <span aria-hidden="true">
+                      {isActive ? (params.order === "asc" ? "▲" : "▼") : "↕"}
+                    </span>
+                  </button>
+                </th>
+              );
+            })}
           </tr>
         </thead>
 
@@ -116,6 +161,12 @@ export function IncidentTable({
                     {incident.assignee?.name ?? (
                       <span className="text-foreground-subtle">Unassigned</span>
                     )}
+                  </td>
+
+                  <td className="truncate px-3 py-2.5 text-foreground-muted">
+                    <time dateTime={incident.createdAt}>
+                      {formatRelativeTime(incident.createdAt)}
+                    </time>
                   </td>
 
                   <td className="truncate px-3 py-2.5 text-foreground-muted">

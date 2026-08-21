@@ -31,12 +31,7 @@ export function IncidentListPage() {
         </p>
       </header>
 
-      <IncidentFilters
-        params={params}
-        setParams={setParams}
-        hasActiveFilters={hasActiveFilters}
-        clearFilters={clearFilters}
-      />
+      <IncidentFilters />
 
       <section aria-label="Incident list" className="space-y-3">
         {incidentsQuery.isError && (

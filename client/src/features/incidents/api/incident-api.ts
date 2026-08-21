@@ -50,7 +50,7 @@ export async function getIncidents(
 }
 
 export async function getServices(): Promise<string[]> {
-  const response = await fetch("/api/incidents/services");
+  const response = await fetch("/api/services");
 
   if (!response.ok) {
     throw await toApiError(response);
