@@ -1,9 +1,15 @@
+import { Navigate, Routes, Route } from "react-router";
+import { IncidentListPage } from "@/features/incidents/pages/IncidentListPage";
+import { AppLayout } from "@/app/layouts/AppLayout";
+
 function App() {
   return (
-    <main>
-      <h1>AtlasOps</h1>
-      <p>Incident management console</p>
-    </main>
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route index element={<Navigate to="/incidents" replace />} />
+        <Route path="incidents" element={<IncidentListPage />} />
+      </Route>
+    </Routes>
   );
 }
 
