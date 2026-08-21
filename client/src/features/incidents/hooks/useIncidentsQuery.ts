@@ -1,6 +1,11 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
-import { getIncident, getIncidents, getServices } from "../api/incident-api";
+import {
+  getIncident,
+  getIncidents,
+  getServices,
+  getUsers,
+} from "../api/incident-api";
 import type { IncidentListParams } from "../types/incident-list.types";
 import { incidentQueryKeys } from "../api/incident-query-keys";
 import { ApiError } from "@/shared/api/api-error";
@@ -33,5 +38,13 @@ export function useIncidentQuery(incidentId: string) {
 
       return failureCount < 1;
     },
+  });
+}
+
+export function useUsersQuery() {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: () => getUsers(),
+    staleTime: Infinity,
   });
 }

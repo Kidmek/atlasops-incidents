@@ -3,6 +3,7 @@ import { toApiError } from "@/shared/api/api-error";
 import {
   incidentListResponseSchema,
   servicesResponseSchema,
+  usersResponseSchema,
 } from "../schemas/incident-list.schema";
 import type {
   IncidentListParams,
@@ -11,11 +12,14 @@ import type {
 import {
   incidentSchema,
   incidentStatusUpdateSchema,
+  incidentNoteSchema,
 } from "../schemas/incident.schema";
 import type {
   Incident,
+  IncidentNote,
   IncidentStatus,
   IncidentStatusUpdate,
+  UserSummary,
 } from "../types/incident.types";
 
 export async function getIncidents(
@@ -112,4 +116,60 @@ export async function updateIncidentStatus(
   const data: unknown = await response.json();
 
   return incidentStatusUpdateSchema.parse(data);
+}
+
+export async function getUsers(signal?: AbortSignal): Promise<UserSummary[]> {
+  const response = await fetch("/api/users", { signal });
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  const data: unknown = await response.json();
+
+  return usersResponseSchema.parse(data).items;
+}
+
+export async function assignIncident(
+  incidentId: string,
+  assigneeId: string | null
+): Promise<Incident> {
+  const response = await fetch(
+    `/api/incidents/${encodeURIComponent(incidentId)}/assignee`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ assigneeId }),
+    }
+  );
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  const data: unknown = await response.json();
+
+  return incidentSchema.parse(data);
+}
+
+export async function addIncidentNote(
+  incidentId: string,
+  message: string
+): Promise<IncidentNote> {
+  const response = await fetch(
+    `/api/incidents/${encodeURIComponent(incidentId)}/notes`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    }
+  );
+
+  if (!response.ok) {
+    throw await toApiError(response);
+  }
+
+  const data: unknown = await response.json();
+
+  return incidentNoteSchema.parse(data);
 }

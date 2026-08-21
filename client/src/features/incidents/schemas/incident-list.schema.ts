@@ -4,6 +4,7 @@ import {
   incidentSchema,
   incidentSeveritySchema,
   incidentStatusSchema,
+  userSummarySchema,
 } from "./incident.schema";
 
 export const incidentListResponseSchema = z.object({
@@ -29,3 +30,6 @@ export const incidentListParamsSchema = z.object({
 });
 
 export const servicesResponseSchema = z.object({ items: z.array(z.string()) });
+export const usersResponseSchema = z.object({
+  items: z.array(userSummarySchema),
+});
