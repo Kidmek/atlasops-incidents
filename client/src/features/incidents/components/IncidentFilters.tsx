@@ -10,11 +10,26 @@ import {
   incidentStatusSchema,
 } from "../schemas/incident.schema";
 import { useIncidentListParams } from "../hooks/useIncidentListParams";
+import type {
+  IncidentSortField,
+  SortDirection,
+} from "../types/incident-list.types";
 
 // Taken from the schemas so the filter options can never drift from the
 // values the API actually accepts.
 const STATUS_OPTIONS = incidentStatusSchema.options;
 const SEVERITY_OPTIONS = incidentSeveritySchema.options;
+
+// Sorting lives in the table headers on wide screens; the cards below `md`
+// have no headers, so the same three sort fields are offered here.
+const SORT_OPTIONS = [
+  { value: "updatedAt:desc", label: "Recently updated" },
+  { value: "updatedAt:asc", label: "Least recently updated" },
+  { value: "createdAt:desc", label: "Newest first" },
+  { value: "createdAt:asc", label: "Oldest first" },
+  { value: "severity:desc", label: "Most severe" },
+  { value: "severity:asc", label: "Least severe" },
+] as const;
 
 function toggleValue<T>(values: T[], value: T): T[] {
   return values.includes(value)
@@ -57,6 +72,27 @@ export function IncidentFilters() {
             {servicesQuery.data?.map((service) => (
               <option key={service} value={service}>
                 {service}
+              </option>
+            ))}
+          </Select>
+        </div>
+
+        <div className="space-y-1.5 md:hidden">
+          <Label htmlFor="incident-sort">Sort</Label>
+          <Select
+            id="incident-sort"
+            value={`${params.sort}:${params.order}`}
+            onChange={(event) => {
+              const [sort, order] = event.target.value.split(":");
+              setParams({
+                sort: sort as IncidentSortField,
+                order: order as SortDirection,
+              });
+            }}
+          >
+            {SORT_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </Select>

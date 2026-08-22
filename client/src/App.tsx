@@ -1,6 +1,7 @@
 import { Navigate, Routes, Route } from "react-router";
 import { IncidentListPage } from "@/features/incidents/pages/IncidentListPage";
 import { AppLayout } from "@/app/layouts/AppLayout";
+import { NotFoundPage } from "@/app/pages/NotFoundPage";
 import { IncidentDetailPage } from "@/features/incidents/pages/IncidentDetailPage";
 import { IncidentCreatePage } from "@/features/incidents/pages/IncidentCreatePage";
 
@@ -12,6 +13,7 @@ function App() {
         <Route path="incidents" element={<IncidentListPage />} />
         <Route path="incidents/new" element={<IncidentCreatePage />} />
         <Route path="incidents/:incidentId" element={<IncidentDetailPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

@@ -4,7 +4,7 @@ import { ApiError } from "@/shared/api/api-error";
 import { Button } from "@/shared/ui/atoms/Button";
 import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
 
-import { IncidentTable } from "../components/IncidentTable";
+import { IncidentList } from "../components/IncidentList";
 import { useIncidentListParams } from "../hooks/useIncidentListParams";
 import { useIncidentsQuery } from "../hooks/useIncidentsQuery";
 import { IncidentFilters } from "../components/IncidentFilters";
@@ -25,7 +25,7 @@ export function IncidentListPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Incidents</h1>
           <p className="mt-1 text-sm text-foreground-muted">
@@ -34,7 +34,7 @@ export function IncidentListPage() {
         </div>
         <Link
           to="/incidents/new"
-          className="inline-flex h-10 items-center rounded-control bg-primary px-4 text-sm font-medium text-foreground-inverse hover:bg-primary-hover"
+          className="inline-flex h-10 shrink-0 items-center self-start whitespace-nowrap rounded-control bg-primary px-4 text-sm font-medium text-foreground-inverse hover:bg-primary-hover sm:self-auto"
         >
           New incident
         </Link>
@@ -64,7 +64,7 @@ export function IncidentListPage() {
           </div>
         )}
 
-        {incidentsQuery.isPending && <IncidentTable incidents={[]} isLoading />}
+        {incidentsQuery.isPending && <IncidentList incidents={[]} isLoading />}
 
         {incidentsQuery.data && (
           <>
@@ -96,7 +96,7 @@ export function IncidentListPage() {
                     incidentsQuery.isPlaceholderData ? "opacity-60" : undefined
                   }
                 >
-                  <IncidentTable incidents={incidentsQuery.data.items} />
+                  <IncidentList incidents={incidentsQuery.data.items} />
                 </div>
                 <Pagination
                   page={incidentsQuery.data.page}
