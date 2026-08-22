@@ -178,7 +178,12 @@ export function IncidentCreatePage() {
           </FormField>
         </div>
 
-        <Button type="submit" variant="primary" disabled={isBusy}>
+        <Button
+          className="w-full sm:w-auto"
+          type="submit"
+          variant="primary"
+          disabled={isBusy}
+        >
           {isBusy ? "Creating…" : "Create incident"}
         </Button>
       </form>

@@ -31,7 +31,7 @@ export function IncidentNoteForm({ incidentId }: { incidentId: string }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2">
+    <form onSubmit={handleSubmit} className="space-y-2 ">
       <Label htmlFor="incident-note">Add a note</Label>
 
       <Textarea
@@ -46,12 +46,17 @@ export function IncidentNoteForm({ incidentId }: { incidentId: string }) {
 
       <FieldError id="incident-note-error">{validationError}</FieldError>
 
-      <div className="flex items-center gap-3">
-        <Button type="submit" variant="primary" disabled={mutation.isPending}>
+      <div className="flex items-center gap-3 sm:flex-row flex-col">
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={mutation.isPending}
+          className="w-full sm:w-auto"
+        >
           {mutation.isPending ? "Adding…" : "Add note"}
         </Button>
 
-        <span aria-live="polite" className="text-sm text-danger">
+        <span aria-live="polite" className="text-sm text-danger text-center">
           {mutation.isError
             ? mutation.error instanceof ApiError
               ? mutation.error.message

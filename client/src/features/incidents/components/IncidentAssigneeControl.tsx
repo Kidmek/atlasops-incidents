@@ -33,7 +33,7 @@ export function IncidentAssigneeControl({ incident }: { incident: Incident }) {
         ))}
       </Select>
 
-      <p aria-live="polite" className="min-h-5 text-sm">
+      <p aria-live="polite" className="text-sm text-center">
         {mutation.isError ? (
           <span className="text-danger">
             {mutation.error instanceof ApiError

@@ -16,13 +16,14 @@ export function IncidentStatusControl({ incident }: { incident: Incident }) {
   const mutation = useUpdateIncidentStatus(incident.id);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 text-center">
       <div className="flex flex-wrap gap-2">
         {NEXT_STATUSES[incident.status].map((status) => (
           <Button
             key={status}
             variant="primary"
             size="sm"
+            className="w-full sm:w-auto"
             disabled={mutation.isPending}
             onClick={() =>
               mutation.mutate({ status, version: incident.version })
@@ -33,7 +34,7 @@ export function IncidentStatusControl({ incident }: { incident: Incident }) {
         ))}
       </div>
 
-      <p aria-live="polite" className="min-h-5 text-sm">
+      <p aria-live="polite" className=" text-sm">
         {mutation.isError ? (
           <span className="text-danger">
             {mutation.error instanceof ApiError

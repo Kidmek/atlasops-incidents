@@ -12,6 +12,35 @@ import { IncidentStatusControl } from "../components/IncidentStatusControl";
 import { IncidentAssigneeControl } from "../components/IncidentAssigneeControl";
 import { IncidentNoteForm } from "../components/IncidentNoteForm";
 
+function DetailSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-8 w-72" />
+          <div className="flex gap-2">
+            <Skeleton className="h-5 w-20 rounded-full" />
+            <Skeleton className="h-5 w-28 rounded-full" />
+          </div>
+        </div>
+        <Skeleton className="h-8 w-40" />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <Skeleton className="h-28 w-full rounded-panel" />
+          <Skeleton className="h-48 w-full rounded-panel" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-24 w-full rounded-panel" />
+          <Skeleton className="h-36 w-full rounded-panel" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function IncidentDetailPage() {
   const { incidentId = "" } = useParams();
   const location = useLocation();
@@ -37,12 +66,7 @@ export function IncidentDetailPage() {
         ← Back to incidents
       </Link>
 
-      {incidentQuery.isPending && (
-        <div className="space-y-3">
-          <Skeleton className="h-8 w-2/3" />
-          <Skeleton className="h-24 w-full" />
-        </div>
-      )}
+      {incidentQuery.isPending && <DetailSkeleton />}
 
       {incidentQuery.isError && (
         <div
@@ -71,118 +95,121 @@ export function IncidentDetailPage() {
 
       {incidentQuery.data && (
         <article className="space-y-6">
-          <header className="space-y-2">
-            <p className="font-mono text-xs text-foreground-subtle">
-              {incidentQuery.data.id}
-            </p>
+          <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-2">
+              <p className="font-mono text-xs text-foreground-subtle">
+                {incidentQuery.data.id}
+              </p>
 
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {incidentQuery.data.title}
-            </h1>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {incidentQuery.data.title}
+              </h1>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge
-                tone={STATUS_TONE[incidentQuery.data.status]}
-                className="capitalize"
-              >
-                {incidentQuery.data.status}
-              </Badge>
-              <Badge
-                tone={SEVERITY_TONE[incidentQuery.data.severity]}
-                className="capitalize"
-              >
-                {incidentQuery.data.severity} severity
-              </Badge>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  tone={STATUS_TONE[incidentQuery.data.status]}
+                  className="capitalize"
+                >
+                  {incidentQuery.data.status}
+                </Badge>
+                <Badge
+                  tone={SEVERITY_TONE[incidentQuery.data.severity]}
+                  className="capitalize"
+                >
+                  {incidentQuery.data.severity} severity
+                </Badge>
+              </div>
             </div>
+
+            <IncidentStatusControl incident={incidentQuery.data} />
           </header>
 
-          <IncidentStatusControl incident={incidentQuery.data} />
-          <IncidentAssigneeControl incident={incidentQuery.data} />
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="space-y-6 lg:col-span-2">
+              <section className="space-y-2 rounded-panel border border-border bg-surface p-4 shadow-panel">
+                <h2 className="text-lg font-semibold">Description</h2>
+                <p className="whitespace-pre-wrap text-sm text-foreground-muted">
+                  {incidentQuery.data.description}
+                </p>
+              </section>
 
-          <dl className="grid grid-cols-1 gap-4 rounded-panel border border-border bg-surface p-4 shadow-panel sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-foreground-subtle">
-                Service
-              </dt>
-              <dd className="mt-1 text-sm">{incidentQuery.data.service}</dd>
-            </div>
+              <section className="space-y-3">
+                <h2 className="text-lg font-semibold">
+                  Notes ({incidentQuery.data.notes.length})
+                </h2>
 
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-foreground-subtle">
-                Assignee
-              </dt>
-              <dd className="mt-1 text-sm">
-                {incidentQuery.data.assignee?.name ?? "Unassigned"}
-              </dd>
-            </div>
-
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-foreground-subtle">
-                Created
-              </dt>
-              <dd className="mt-1 text-sm">
-                <time dateTime={incidentQuery.data.createdAt}>
-                  {formatRelativeTime(incidentQuery.data.createdAt)}
-                </time>
-              </dd>
-            </div>
-
-            <div>
-              <dt className="text-xs uppercase tracking-wide text-foreground-subtle">
-                Updated
-              </dt>
-              <dd className="mt-1 text-sm">
-                <time dateTime={incidentQuery.data.updatedAt}>
-                  {formatRelativeTime(incidentQuery.data.updatedAt)}
-                </time>
-              </dd>
-            </div>
-          </dl>
-
-          <section className="space-y-2">
-            <h2 className="text-lg font-semibold">Description</h2>
-            <p className="whitespace-pre-wrap text-sm text-foreground-muted">
-              {incidentQuery.data.description}
-            </p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-lg font-semibold">
-              Notes ({incidentQuery.data.notes.length})
-            </h2>
-
-            {incidentQuery.data.notes.length === 0 ? (
-              <p className="text-sm text-foreground-muted">No notes yet.</p>
-            ) : (
-              <ol className="space-y-3">
-                {[...incidentQuery.data.notes]
-                  .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-                  .map((note) => (
-                    <li
-                      key={note.id}
-                      className="rounded-panel border border-border bg-surface p-3 shadow-panel"
-                    >
-                      <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <span className="text-sm font-medium">
-                          {note.author.name}
-                        </span>
-                        <time
-                          dateTime={note.createdAt}
-                          className="text-xs text-foreground-subtle"
+                {incidentQuery.data.notes.length === 0 ? (
+                  <p className="text-sm text-foreground-muted">No notes yet.</p>
+                ) : (
+                  <ol className="space-y-3">
+                    {[...incidentQuery.data.notes]
+                      .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+                      .map((note) => (
+                        <li
+                          key={note.id}
+                          className="rounded-panel border border-border bg-surface p-3 shadow-panel"
                         >
-                          {formatRelativeTime(note.createdAt)}
-                        </time>
-                      </div>
+                          <div className="flex flex-wrap items-baseline justify-between gap-2">
+                            <span className="text-sm font-medium">
+                              {note.author.name}
+                            </span>
+                            <time
+                              dateTime={note.createdAt}
+                              className="text-xs text-foreground-subtle"
+                            >
+                              {formatRelativeTime(note.createdAt)}
+                            </time>
+                          </div>
 
-                      <p className="mt-1 whitespace-pre-wrap text-sm text-foreground-muted">
-                        {note.message}
-                      </p>
-                    </li>
-                  ))}
-              </ol>
-            )}
-            <IncidentNoteForm incidentId={incidentId} />
-          </section>
+                          <p className="mt-1 whitespace-pre-wrap text-sm text-foreground-muted">
+                            {note.message}
+                          </p>
+                        </li>
+                      ))}
+                  </ol>
+                )}
+
+                <IncidentNoteForm incidentId={incidentId} />
+              </section>
+            </div>
+
+            <aside className="space-y-4">
+              <div className="rounded-panel border border-border bg-surface p-4 shadow-panel">
+                <IncidentAssigneeControl incident={incidentQuery.data} />
+              </div>
+
+              <dl className="space-y-3 rounded-panel border border-border bg-surface p-4 shadow-panel">
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-foreground-subtle">
+                    Service
+                  </dt>
+                  <dd className="mt-1 text-sm">{incidentQuery.data.service}</dd>
+                </div>
+
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-foreground-subtle">
+                    Created
+                  </dt>
+                  <dd className="mt-1 text-sm">
+                    <time dateTime={incidentQuery.data.createdAt}>
+                      {formatRelativeTime(incidentQuery.data.createdAt)}
+                    </time>
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-foreground-subtle">
+                    Updated
+                  </dt>
+                  <dd className="mt-1 text-sm">
+                    <time dateTime={incidentQuery.data.updatedAt}>
+                      {formatRelativeTime(incidentQuery.data.updatedAt)}
+                    </time>
+                  </dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
         </article>
       )}
     </div>
