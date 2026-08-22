@@ -4,11 +4,21 @@ import { Badge } from "@/shared/ui/atoms/Badge";
 import { formatRelativeTime } from "@/shared/lib/date";
 
 import type { Incident } from "../types/incident.types";
-import { INCIDENT_TABLE_COLUMNS } from "./incident-table-columns";
 import { Skeleton } from "@/shared/ui/atoms/Skeleton";
 import { useIncidentListParams } from "../hooks/useIncidentListParams";
 import type { IncidentSortField } from "../types/incident-list.types";
 import { STATUS_TONE, SEVERITY_DOT } from "./incident-display";
+
+const INCIDENT_TABLE_COLUMNS = [
+  { key: "id", label: "ID" },
+  { key: "title", label: "Title" },
+  { key: "severity", label: "Severity", sortField: "severity" },
+  { key: "status", label: "Status" },
+  { key: "service", label: "Service" },
+  { key: "assignee", label: "Assignee" },
+  { key: "createdAt", label: "Created", sortField: "createdAt" },
+  { key: "updatedAt", label: "Updated", sortField: "updatedAt" },
+] as const;
 
 export function IncidentTable({
   incidents,

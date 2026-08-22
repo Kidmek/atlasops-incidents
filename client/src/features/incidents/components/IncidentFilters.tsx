@@ -22,7 +22,7 @@ const SEVERITY_OPTIONS = incidentSeveritySchema.options;
 
 // Sorting lives in the table headers on wide screens; the cards below `md`
 // have no headers, so the same three sort fields are offered here.
-const SORT_OPTIONS = [
+const MOBILE_SORT_OPTIONS = [
   { value: "updatedAt:desc", label: "Recently updated" },
   { value: "updatedAt:asc", label: "Least recently updated" },
   { value: "createdAt:desc", label: "Newest first" },
@@ -90,7 +90,7 @@ export function IncidentFilters() {
               });
             }}
           >
-            {SORT_OPTIONS.map((option) => (
+            {MOBILE_SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>

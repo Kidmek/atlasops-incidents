@@ -14,7 +14,7 @@ export function Input({
         "h-10 w-full rounded-control border border-border-strong bg-surface px-3 text-sm text-foreground",
         "placeholder:text-foreground-subtle",
         "disabled:cursor-not-allowed disabled:opacity-50",
-        "aria-[invalid=true]:border-danger",
+        "aria-invalid:border-danger",
         className
       )}
       {...props}
