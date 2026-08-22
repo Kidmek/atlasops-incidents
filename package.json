@@ -1,0 +1,8 @@
+{
+  "name": "atlasops",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix client ci && npm --prefix client run build && npm --prefix server ci && npm --prefix server run build",
+    "start": "npm --prefix server start"
+  }
+}

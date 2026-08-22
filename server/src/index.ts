@@ -7,7 +7,8 @@ if (Number.isNaN(port)) {
 }
 
 const server = app.listen(port, () => {
-  console.log(`Mock API listening on http://localhost:${port}`);
+  console.log(`Mock API listening on http://localhost:${port}/api`);
+  console.log(`Client listening on http://localhost:${port}`);
 });
 
 function shutdown(signal: string) {
