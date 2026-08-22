@@ -3,6 +3,12 @@
   "private": true,
   "scripts": {
     "build": "npm --prefix client ci && npm --prefix client run build && npm --prefix server ci && npm --prefix server run build",
-    "start": "npm --prefix server start"
+    "start": "npm --prefix server start",
+    "docker:build": "docker build --platform linux/amd64 -t atlasops .",
+    "docker:run": "docker run --rm -p 3001:3001 -e ENABLE_MOCK_CONTROLS=true atlasops",
+    "deploy:push": "aws lightsail push-container-image --service-name atlasops --label app --image atlasops",
+    "deploy:status": "aws lightsail get-container-services --service-name atlasops --query 'containerServices[0].[state,currentDeployment.state]' --output text",
+    "deploy:logs": "aws lightsail get-container-log --service-name atlasops --container-name app",
+    "deploy:release": "aws lightsail create-container-service-deployment --cli-input-json file://lightsail-deployment.json"
   }
 }

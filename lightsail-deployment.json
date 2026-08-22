@@ -1,0 +1,20 @@
+{
+  "serviceName": "atlasops",
+  "containers": {
+    "app": {
+      "image": ":atlasops.app.2",
+      "ports": { "3001": "HTTP" },
+      "environment": {
+        "PORT": "3001",
+        "NODE_ENV": "production",
+        "ENABLE_MOCK_CONTROLS": "true",
+        "MOCK_RANDOM_FAILURES": "false"
+      }
+    }
+  },
+  "publicEndpoint": {
+    "containerName": "app",
+    "containerPort": 3001,
+    "healthCheck": { "path": "/api/health", "successCodes": "200" }
+  }
+}

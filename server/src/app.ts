@@ -1,4 +1,5 @@
 import express from "express";
+import compression from "compression";
 import swaggerUi from "swagger-ui-express";
 
 import { incidentStore, type IncidentStore } from "./data/incident-store.js";
@@ -47,6 +48,7 @@ export function createApp(options: CreateAppOptions = {}) {
   );
 
   app.disable("x-powered-by");
+  app.use(compression());
 
   app.use(express.json({ limit: "100kb" }));
 
@@ -81,11 +83,26 @@ export function createApp(options: CreateAppOptions = {}) {
   app.use("/api", createApiRouter(incidentService, { enableFailureControls }));
 
   if (serveClient) {
+    // Vite content-hashes these filenames, so a change produces a new name —
+    // the bytes at a given name can never change, hence immutable.
+    app.use(
+      "/assets",
+      express.static(path.join(CLIENT_DIST_PATH, "assets"), {
+        maxAge: "1y",
+        immutable: true,
+      })
+    );
+
+    // index.html must stay uncached; it points at the hashed asset names.
     app.use(express.static(CLIENT_DIST_PATH));
 
     // Non-API GETs fall back to index.html so client routes survive a refresh.
     app.use((request, response, next) => {
-      if (request.method !== "GET" || request.path.startsWith("/api")) {
+      if (
+        request.method !== "GET" ||
+        request.path.startsWith("/api") ||
+        request.path.startsWith("/assets")
+      ) {
         next();
         return;
       }
