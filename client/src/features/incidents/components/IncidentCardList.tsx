@@ -39,7 +39,7 @@ export function IncidentCardList({
       {incidents.map((incident) => (
         <li
           key={incident.id}
-          className="rounded-panel border border-border bg-surface p-4 shadow-panel"
+          className="relative rounded-panel border border-border bg-surface p-4 shadow-panel focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus"
         >
           <div className="flex items-start justify-between gap-2">
             <span className="font-mono text-xs text-foreground-subtle">
@@ -52,17 +52,22 @@ export function IncidentCardList({
           </div>
 
           <h3 className="mt-1 font-medium">
+            {/* The pseudo-element stretches the hit area over the whole card
+                while the anchor stays the only focusable control. */}
             <Link
               to={incident.id}
               state={{ from: location.search }}
-              className="hover:underline"
+              className="outline-none after:absolute after:inset-0 after:rounded-panel"
             >
               {incident.title}
             </Link>
           </h3>
 
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-foreground-muted">
-            <Badge tone={SEVERITY_TONE[incident.severity]} className="capitalize">
+            <Badge
+              tone={SEVERITY_TONE[incident.severity]}
+              className="capitalize"
+            >
               {incident.severity}
             </Badge>
 

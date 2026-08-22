@@ -2,7 +2,7 @@
   "serviceName": "atlasops",
   "containers": {
     "app": {
-      "image": ":atlasops.app.2",
+      "image": ":atlasops.app.3",
       "ports": { "3001": "HTTP" },
       "environment": {
         "PORT": "3001",
