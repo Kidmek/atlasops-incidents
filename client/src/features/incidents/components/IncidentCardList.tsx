@@ -4,7 +4,7 @@ import { Badge } from "@/shared/ui/atoms/Badge";
 import { Skeleton } from "@/shared/ui/atoms/Skeleton";
 import { formatRelativeTime } from "@/shared/lib/date";
 
-import { SEVERITY_DOT, STATUS_TONE } from "./incident-display";
+import { SEVERITY_TONE, STATUS_TONE } from "./incident-display";
 import type { Incident } from "../types/incident.types";
 
 /** The small-screen presentation of the same data the table shows. */
@@ -62,13 +62,9 @@ export function IncidentCardList({
           </h3>
 
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-foreground-muted">
-            <span className="inline-flex items-center gap-1.5 capitalize">
-              <span
-                aria-hidden="true"
-                className={`size-2 rounded-full ${SEVERITY_DOT[incident.severity]}`}
-              />
+            <Badge tone={SEVERITY_TONE[incident.severity]} className="capitalize">
               {incident.severity}
-            </span>
+            </Badge>
 
             <span>{incident.service}</span>
 

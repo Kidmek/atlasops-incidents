@@ -11,7 +11,7 @@ export function Input({
     <input
       type={type}
       className={cn(
-        "h-10 w-full rounded-control border border-border-strong bg-surface px-3 text-sm text-foreground",
+        "h-10 w-full rounded-control border border-border bg-surface px-3 text-sm text-foreground",
         "placeholder:text-foreground-subtle",
         "disabled:cursor-not-allowed disabled:opacity-50",
         "aria-invalid:border-danger",

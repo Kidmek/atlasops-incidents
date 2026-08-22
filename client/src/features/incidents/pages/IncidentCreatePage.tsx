@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 import { ApiError } from "@/shared/api/api-error";
 import { Button } from "@/shared/ui/atoms/Button";
@@ -23,6 +23,7 @@ export function IncidentCreatePage() {
   const servicesQuery = useServicesQuery();
   const usersQuery = useUsersQuery();
   const mutation = useCreateIncident();
+  const location = useLocation();
 
   const {
     register,
@@ -41,6 +42,11 @@ export function IncidentCreatePage() {
       status: "triggered",
     },
   });
+
+  const backTo = {
+    pathname: "/incidents",
+    search: (location.state as { from?: string } | null)?.from ?? "",
+  };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -70,7 +76,7 @@ export function IncidentCreatePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <Link
-        to="/incidents"
+        to={backTo}
         className="inline-block text-sm text-foreground-muted hover:underline"
       >
         ← Back to incidents
@@ -81,7 +87,7 @@ export function IncidentCreatePage() {
       {mutation.isError && (
         <div
           role="alert"
-          className="rounded-panel border border-danger-border bg-danger-subtle p-4 text-sm text-danger"
+          className="rounded-panel border border-danger bg-danger-subtle p-4 text-sm text-danger"
         >
           {mutation.error instanceof ApiError
             ? mutation.error.message

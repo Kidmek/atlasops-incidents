@@ -2,15 +2,13 @@ import type { ComponentProps } from "react";
 
 import { cn } from "@/shared/lib/cn";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+type ButtonVariant = "primary" | "secondary";
 type ButtonSize = "sm" | "md";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "bg-primary text-foreground-inverse hover:bg-primary-hover",
+  primary: "bg-primary text-white hover:bg-primary-hover",
   secondary:
-    "border border-border-strong bg-surface text-foreground hover:bg-surface-subtle",
-  ghost: "text-foreground-muted hover:bg-surface-subtle hover:text-foreground",
-  danger: "bg-danger text-foreground-inverse hover:bg-danger-hover",
+    "border border-border bg-surface text-foreground hover:bg-surface-subtle",
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {

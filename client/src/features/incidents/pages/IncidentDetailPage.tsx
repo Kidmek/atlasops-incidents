@@ -47,7 +47,7 @@ export function IncidentDetailPage() {
       {incidentQuery.isError && (
         <div
           role="alert"
-          className="rounded-panel border border-danger-border bg-danger-subtle p-4"
+          className="rounded-panel border border-danger bg-danger-subtle p-4"
         >
           <p className="text-sm text-danger">
             {notFound

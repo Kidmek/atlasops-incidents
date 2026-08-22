@@ -6,24 +6,21 @@
     "Segoe UI", sans-serif;
 
   /* Surfaces */
-  --color-canvas: #f8fafc;
+  --color-background: #f8fafc;
   --color-surface: #ffffff;
   --color-surface-subtle: #f1f5f9;
 
   /* Borders */
   --color-border: #e2e8f0;
-  --color-border-strong: #cbd5e1;
 
   /* Text */
   --color-foreground: #0f172a;
   --color-foreground-muted: #475569;
   --color-foreground-subtle: #64748b;
-  --color-foreground-inverse: #ffffff;
 
   /* Primary actions */
   --color-primary: #1d4ed8;
   --color-primary-hover: #1e40af;
-  --color-primary-subtle: #eff6ff;
 
   /* Focus */
   --color-focus: #2563eb;
@@ -31,43 +28,25 @@
   /* Feedback */
   --color-success: #15803d;
   --color-success-subtle: #f0fdf4;
-  --color-success-border: #bbf7d0;
 
   --color-warning: #854d0e;
   --color-warning-subtle: #fefce8;
-  --color-warning-border: #fef08a;
 
   --color-danger: #b91c1c;
-  --color-danger-hover: #991b1b;
   --color-danger-subtle: #fef2f2;
-  --color-danger-border: #fecaca;
 
   --color-info: #0369a1;
   --color-info-subtle: #f0f9ff;
-  --color-info-border: #bae6fd;
-
-  /* Incident severity */
-  --color-severity-critical: #b91c1c;
-  --color-severity-critical-subtle: #fef2f2;
-  --color-severity-critical-border: #fecaca;
-
-  --color-severity-high: #c2410c;
-  --color-severity-high-subtle: #fff7ed;
-  --color-severity-high-border: #fed7aa;
-
-  --color-severity-medium: #854d0e;
-  --color-severity-medium-subtle: #fefce8;
-  --color-severity-medium-border: #fef08a;
-
-  --color-severity-low: #0369a1;
-  --color-severity-low-subtle: #f0f9ff;
-  --color-severity-low-border: #bae6fd;
 
   /* Shape and elevation */
   --radius-control: 0.5rem;
   --radius-panel: 0.75rem;
 
-  --shadow-panel: 0 1px 2px rgb(15 23 42 / 0.05), 0 1px 3px rgb(15 23 42 / 0.08);
+  /* The foreground colour at very low opacity, so panels lift off the
+     background without a separate shadow colour to keep in sync. */
+  --shadow-panel:
+    0 1px 2px color-mix(in srgb, var(--color-foreground) 5%, transparent),
+    0 1px 3px color-mix(in srgb, var(--color-foreground) 8%, transparent);
 }
 
 @layer base {
@@ -78,13 +57,12 @@
   body {
     min-width: 320px;
     min-height: 100vh;
-    background: var(--color-canvas);
+    background: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
   }
 }

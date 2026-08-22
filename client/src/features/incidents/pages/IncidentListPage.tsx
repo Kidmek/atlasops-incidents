@@ -34,7 +34,8 @@ export function IncidentListPage() {
         </div>
         <Link
           to="/incidents/new"
-          className="inline-flex h-10 shrink-0 items-center self-start whitespace-nowrap rounded-control bg-primary px-4 text-sm font-medium text-foreground-inverse hover:bg-primary-hover sm:self-auto"
+          state={{ from: location.search }}
+          className="inline-flex h-10 shrink-0 items-center self-start whitespace-nowrap rounded-control bg-primary px-4 text-sm font-medium text-white hover:bg-primary-hover sm:self-auto"
         >
           New incident
         </Link>
@@ -46,7 +47,7 @@ export function IncidentListPage() {
         {incidentsQuery.isError && (
           <div
             role="alert"
-            className="rounded-panel border border-danger-border bg-danger-subtle p-4"
+            className="rounded-panel border border-danger bg-danger-subtle p-4"
           >
             <p className="text-sm text-danger">
               {incidentsQuery.error instanceof ApiError

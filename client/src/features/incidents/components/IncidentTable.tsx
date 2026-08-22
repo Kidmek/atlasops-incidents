@@ -7,7 +7,7 @@ import type { Incident } from "../types/incident.types";
 import { Skeleton } from "@/shared/ui/atoms/Skeleton";
 import { useIncidentListParams } from "../hooks/useIncidentListParams";
 import type { IncidentSortField } from "../types/incident-list.types";
-import { STATUS_TONE, SEVERITY_DOT } from "./incident-display";
+import { SEVERITY_TONE, STATUS_TONE } from "./incident-display";
 
 const INCIDENT_TABLE_COLUMNS = [
   { key: "id", label: "ID" },
@@ -127,15 +127,12 @@ export function IncidentTable({
                   </td>
 
                   <td className="px-3 py-2.5 capitalize">
-                    <span className="inline-flex items-center gap-2">
-                      <span
-                        aria-hidden="true"
-                        className={`size-2 rounded-full ${
-                          SEVERITY_DOT[incident.severity]
-                        }`}
-                      />
+                    <Badge
+                      tone={SEVERITY_TONE[incident.severity]}
+                      className="capitalize"
+                    >
                       {incident.severity}
-                    </span>
+                    </Badge>
                   </td>
 
                   <td className="px-3 py-2.5">

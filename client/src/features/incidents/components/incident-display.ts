@@ -16,10 +16,3 @@ export const SEVERITY_TONE: Record<IncidentSeverity, BadgeTone> = {
   medium: "info",
   low: "neutral",
 };
-
-export const SEVERITY_DOT: Record<IncidentSeverity, string> = {
-  critical: "bg-severity-critical",
-  high: "bg-severity-high",
-  medium: "bg-severity-medium",
-  low: "bg-severity-low",
-};
