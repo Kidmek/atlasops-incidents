@@ -6,7 +6,7 @@ import { useAssignIncident } from "../hooks/useIncidentsMutation";
 import { useUsersQuery } from "../hooks/useIncidentsQuery";
 import type { Incident } from "../types/incident.types";
 
-export function IncidentAssigneeControl({ incident }: { incident: Incident }) {
+export function IncidentAssignee({ incident }: { incident: Incident }) {
   const usersQuery = useUsersQuery();
   const mutation = useAssignIncident(incident.id);
 

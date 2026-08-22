@@ -9,8 +9,8 @@ import { formatRelativeTime } from "@/shared/lib/date";
 import { useIncidentQuery } from "../hooks/useIncidentsQuery";
 import { STATUS_TONE, SEVERITY_TONE } from "../components/incident-display";
 import { IncidentStatusControl } from "../components/IncidentStatusControl";
-import { IncidentAssigneeControl } from "../components/IncidentAssigneeControl";
-import { IncidentNoteForm } from "../components/IncidentNoteForm";
+import { IncidentAssignee } from "../components/IncidentAssignee";
+import { IncidentNote } from "../components/IncidentNoteForm";
 
 function DetailSkeleton() {
   return (
@@ -133,7 +133,7 @@ export function IncidentDetailPage() {
                 </p>
               </section>
 
-              <section className="space-y-3">
+              <section className="space-y-5">
                 <h2 className="text-lg font-semibold">
                   Notes ({incidentQuery.data.notes.length})
                 </h2>
@@ -169,13 +169,13 @@ export function IncidentDetailPage() {
                   </ol>
                 )}
 
-                <IncidentNoteForm incidentId={incidentId} />
+                <IncidentNote incidentId={incidentId} />
               </section>
             </div>
 
             <aside className="space-y-4">
               <div className="rounded-panel border border-border bg-surface p-4 shadow-panel">
-                <IncidentAssigneeControl incident={incidentQuery.data} />
+                <IncidentAssignee incident={incidentQuery.data} />
               </div>
 
               <dl className="space-y-3 rounded-panel border border-border bg-surface p-4 shadow-panel">

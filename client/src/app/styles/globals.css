@@ -48,8 +48,44 @@
 }
 
 @layer base {
-  html {
+  :root {
     color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-surface-subtle: #334155;
+
+    --color-border: #334155;
+
+    --color-foreground: #f1f5f9;
+    --color-foreground-muted: #cbd5e1;
+    --color-foreground-subtle: #94a3b8;
+
+    /* Kept dark enough that the white button label stays above 4.5:1. */
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+
+    --color-focus: #60a5fa;
+
+    --color-success: #4ade80;
+    --color-success-subtle: #052e16;
+
+    --color-warning: #fbbf24;
+    --color-warning-subtle: #451a03;
+
+    --color-danger: #f87171;
+    --color-danger-subtle: #450a0a;
+
+    --color-info: #38bdf8;
+    --color-info-subtle: #082f49;
+
+    /* Not derived from --color-foreground here: that token is now near-white,
+       which would turn the shadow into a glow. */
+    --shadow-panel: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px rgb(0 0 0 / 0.4);
   }
 
   body {

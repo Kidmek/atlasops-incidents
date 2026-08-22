@@ -5,7 +5,7 @@ import { cn } from "@/shared/lib/cn";
 export function Label({ className, ...props }: ComponentProps<"label">) {
   return (
     <label
-      className={cn("text-sm font-medium text-foreground", className)}
+      className={cn("block text-sm font-medium text-foreground", className)}
       {...props}
     />
   );

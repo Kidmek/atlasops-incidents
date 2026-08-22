@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 
 import { ApiError } from "@/shared/api/api-error";
 import { Button } from "@/shared/ui/atoms/Button";
@@ -8,12 +8,12 @@ import { Textarea } from "@/shared/ui/atoms/Textarea";
 
 import { useAddIncidentNote } from "../hooks/useIncidentsMutation";
 
-export function IncidentNoteForm({ incidentId }: { incidentId: string }) {
+export function IncidentNote({ incidentId }: { incidentId: string }) {
   const [message, setMessage] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const mutation = useAddIncidentNote(incidentId);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmed = message.trim();
@@ -31,7 +31,7 @@ export function IncidentNoteForm({ incidentId }: { incidentId: string }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 ">
+    <form onSubmit={handleSubmit} className="space-y-2">
       <Label htmlFor="incident-note">Add a note</Label>
 
       <Textarea
