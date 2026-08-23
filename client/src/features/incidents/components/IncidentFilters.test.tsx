@@ -61,6 +61,32 @@ describe("IncidentFilters", () => {
     expect(screen.getByRole("checkbox", { name: "triggered" })).toBeChecked();
   });
 
+  it("filters from the keyboard", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<IncidentFiltersWithProbe />);
+
+    await user.tab();
+    await screen.findByRole("option", { name: MOCK_SERVICES[0] });
+
+    expect(screen.getByRole("searchbox", { name: "Search" })).toHaveFocus();
+
+    await user.keyboard("payments");
+
+    await user.tab();
+    expect(screen.getByRole("combobox", { name: "Service" })).toHaveFocus();
+
+    await user.tab();
+    await user.tab();
+    expect(screen.getByRole("checkbox", { name: "triggered" })).toHaveFocus();
+
+    await user.keyboard(" ");
+
+    expect(urlParams()).toEqual({
+      q: "payments",
+      status: "triggered",
+    });
+  });
+
   it("updates the URL when the filter is changed", async () => {
     const user = userEvent.setup();
     renderWithProviders(<IncidentFiltersWithProbe />);

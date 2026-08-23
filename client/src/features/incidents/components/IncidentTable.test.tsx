@@ -32,6 +32,7 @@ describe("IncidentTable", () => {
     expect(screen.getByText("Checkout latency increased")).toBeInTheDocument();
     expect(screen.getByText("Kidus Mekonnen")).toBeInTheDocument();
   });
+
   it("sorts by severity, updatedAt, and createdAt when their headers are clicked", async () => {
     const user = userEvent.setup();
 
@@ -68,5 +69,27 @@ describe("IncidentTable", () => {
     expect(
       screen.getByRole("columnheader", { name: "Updated" })
     ).toHaveAttribute("aria-sort", "none");
+  });
+
+  it("sorts from the keyboard", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <IncidentTable incidents={[buildIncident()]} />
+      </MemoryRouter>
+    );
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Severity" })).toHaveFocus();
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Created" })).toHaveFocus();
+
+    await user.keyboard("{Enter}");
+
+    expect(
+      screen.getByRole("columnheader", { name: "Created" })
+    ).toHaveAttribute("aria-sort", "descending");
   });
 });
