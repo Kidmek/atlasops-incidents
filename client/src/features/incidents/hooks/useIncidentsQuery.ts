@@ -15,6 +15,7 @@ export function useIncidentsQuery(params: IncidentListParams) {
     queryKey: incidentQueryKeys.list(params),
     queryFn: ({ signal }) => getIncidents(params, signal),
     placeholderData: keepPreviousData,
+    refetchInterval: 30_000,
   });
 }
 
