@@ -25,16 +25,16 @@ investigation notes.
 
 ### Stack
 
-| | | Why |
-|---|---|---|
-| React 19 + TypeScript + Vite | UI | Required; Vite for fast builds and one config shared with the test runner |
-| TanStack Query | server state | Caching, cancellation, optimistic updates, and reconciliation — the four things this brief asks for by name |
-| React Router | routing + URL state | `useSearchParams` makes the URL the single source of truth for list state |
-| React Hook Form + Zod | forms | Uncontrolled inputs avoid a re-render per keystroke; the Zod schema mirrors the server's rules |
-| Zod | runtime validation | Applied at every untrusted boundary: API responses, form input, URL parameters |
-| Tailwind CSS 4 | styling | Semantic tokens in `@theme`; components never reference raw colour values |
-| Vitest + Testing Library + MSW | tests | Vitest reuses `vite.config.ts`; MSW intercepts at the network layer so tests exercise the real fetch path |
-| Express 5 + Zod | mock API | 1,043 deterministic incidents, simulated latency, failure controls, Swagger |
+|                                |                     | Why                                                                                                         |
+| ------------------------------ | ------------------- | ----------------------------------------------------------------------------------------------------------- |
+| React 19 + TypeScript + Vite   | UI                  | Required; Vite for fast builds and one config shared with the test runner                                   |
+| TanStack Query                 | server state        | Caching, cancellation, optimistic updates, and reconciliation — the four things this brief asks for by name |
+| React Router                   | routing + URL state | `useSearchParams` makes the URL the single source of truth for list state                                   |
+| React Hook Form + Zod          | forms               | Uncontrolled inputs avoid a re-render per keystroke; the Zod schema mirrors the server's rules              |
+| Zod                            | runtime validation  | Applied at every untrusted boundary: API responses, form input, URL parameters                              |
+| Tailwind CSS 4                 | styling             | Semantic tokens in `@theme`; components never reference raw colour values                                   |
+| Vitest + Testing Library + MSW | tests               | Vitest reuses `vite.config.ts`; MSW intercepts at the network layer so tests exercise the real fetch path   |
+| Express 5 + Zod                | mock API            | 1,043 deterministic incidents, simulated latency, failure controls, Swagger                                 |
 
 ---
 
@@ -74,12 +74,12 @@ npm run docker:build && npm run docker:run
 
 All server-side; the client reads none.
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `PORT` | `3001` | Listen port |
-| `NODE_ENV` | — | `production` disables mock failure controls; `test` disables simulated latency |
-| `ENABLE_MOCK_CONTROLS` | off in production | Enables the `X-Mock-*` development headers |
-| `MOCK_RANDOM_FAILURES` | `false` | 3% random 500s when `true` |
+| Variable               | Default           | Purpose                                                                        |
+| ---------------------- | ----------------- | ------------------------------------------------------------------------------ |
+| `PORT`                 | `3001`            | Listen port                                                                    |
+| `NODE_ENV`             | —                 | `production` disables mock failure controls; `test` disables simulated latency |
+| `ENABLE_MOCK_CONTROLS` | off in production | Enables the `X-Mock-*` development headers                                     |
+| `MOCK_RANDOM_FAILURES` | `false`           | 3% random 500s when `true`                                                     |
 
 `server/.env.example` documents these. The client needs no configuration because it is
 served same-origin with the API.
@@ -139,13 +139,13 @@ TanStack Query, with the request layer in `features/incidents/api`.
 
 Five kinds of state, deliberately separated:
 
-| Kind | Where | Example |
-|---|---|---|
-| Server state | TanStack Query | incidents, users, services |
-| URL state | `useSearchParams` via `useIncidentListParams` | search, filters, sort, page |
-| Form state | React Hook Form | the create form |
-| Local state | `useState` | note draft, theme |
-| Shared client state | **none** | — |
+| Kind                | Where                                         | Example                     |
+| ------------------- | --------------------------------------------- | --------------------------- |
+| Server state        | TanStack Query                                | incidents, users, services  |
+| URL state           | `useSearchParams` via `useIncidentListParams` | search, filters, sort, page |
+| Form state          | React Hook Form                               | the create form             |
+| Local state         | `useState`                                    | note draft, theme           |
+| Shared client state | **none**                                      | —                           |
 
 There is no global state library, because nothing needed one. Server state is cached by
 Query, view state is in the URL, and the only cross-cutting concern — the theme — lives in
@@ -198,7 +198,7 @@ one instance's memory and vanish on the next request. The store needs a long-liv
 
 So Express serves both `/api` and the built SPA from one origin, deployed as a single
 container on Lightsail. The upside is real: the client needs no `VITE_API_BASE_URL`, there
-is no CORS configuration, and relative `/api` paths are *correct* rather than a dev-time
+is no CORS configuration, and relative `/api` paths are _correct_ rather than a dev-time
 convenience.
 
 **With an actual backend I would not deploy it this way.** The frontend would go to
@@ -215,7 +215,7 @@ been the bulk of the project and worse than the one that exists.
 
 ### `Intl.RelativeTimeFormat` over date-fns
 
-The app only *displays* dates — no parsing, arithmetic, or ranges. The platform API is
+The app only _displays_ dates — no parsing, arithmetic, or ranges. The platform API is
 localized by default, where date-fns would need a locale import. §10 asks specifically to
 avoid large dependencies for trivial functionality, and two format calls didn't justify one.
 
@@ -245,7 +245,7 @@ The status mutation sends the incident's `version`, so a concurrent edit produce
 `409` instead of a silent overwrite. `onMutate` cancels in-flight refetches, snapshots, and
 patches; `onError` restores the snapshot; `onSettled` invalidates. Cancelling first is the
 step that's easy to skip and the one that breaks it — without it a refetch already in
-flight resolves *after* the optimistic write and reverts it.
+flight resolves _after_ the optimistic write and reverts it.
 
 ---
 
@@ -255,11 +255,11 @@ flight resolves *after* the optimistic write and reverts it.
 
 ### Measured on the deployed build
 
-| | Before | After |
-|---|---|---|
-| `index-*.js` over the wire | 384,490 B | 114,333 B (**−70%**) |
-| `/api/incidents?pageSize=25` | 10,560 B | 1,762 B (**−83%**) |
-| Asset `Cache-Control` | `max-age=0` | `max-age=31536000, immutable` |
+|                              | Before      | After                         |
+| ---------------------------- | ----------- | ----------------------------- |
+| `index-*.js` over the wire   | 384,490 B   | 114,333 B (**−70%**)          |
+| `/api/incidents?pageSize=25` | 10,560 B    | 1,762 B (**−83%**)            |
+| Asset `Cache-Control`        | `max-age=0` | `max-age=31536000, immutable` |
 
 Express's `static` doesn't compress, so every visitor was downloading 384 KB of JavaScript
 that should have been 114 KB. Added `compression` and a one-year immutable cache on Vite's
@@ -278,7 +278,7 @@ once Express also served the SPA, **every JS and CSS file** would have been dela
 - **Memoization by default** — `useMemo` is used where identity is consumed (the parsed URL
   params, which must change identity exactly when the view changes), not sprinkled.
 - **Debounce placement** — search writes to the URL on every keystroke so the input stays a
-  controlled reflection of it, but the *query* uses a debounced copy. One request per pause,
+  controlled reflection of it, but the _query_ uses a debounced copy. One request per pause,
   not per keystroke.
 
 ---
@@ -307,7 +307,7 @@ sorting entirely by `Tab` and `Enter` to lock that in.
 - Filter checkboxes are wrapped in their `<label>` — no `id`/`htmlFor` pair to typo or
   collide, and the whole label is a target.
 - `<fieldset>`/`<legend>` name each filter group.
-- Icon-only buttons carry an `aria-label` describing the *action*.
+- Icon-only buttons carry an `aria-label` describing the _action_.
 
 ### Announcements
 
@@ -320,11 +320,11 @@ doesn't shift and a late-appearing region is still announced. The offline banner
 Status is never conveyed by colour alone; every badge carries text. Contrast was measured
 on the live DOM in dark mode:
 
-| | Ratio | AA (4.5:1) |
-|---|---|---|
-| White on primary button | 5.17 | ✅ |
-| Heading on background | 16.30 | ✅ |
-| Smallest label text | 5.71 | ✅ |
+|                         | Ratio | AA (4.5:1) |
+| ----------------------- | ----- | ---------- |
+| White on primary button | 5.17  | ✅         |
+| Heading on background   | 16.30 | ✅         |
+| Smallest label text     | 5.71  | ✅         |
 
 Dark-mode primary was deliberately kept at `#2563eb` rather than lightened — `#3b82f6`
 would have dropped the button label to ~3.7:1 and failed.
@@ -345,13 +345,13 @@ would have dropped the button label to ~3.7:1 and failed.
 
 ### Covered
 
-| Required case | Where |
-|---|---|
-| List rendering | `IncidentTable.test.tsx` |
-| Search / filtering | `IncidentFilters.test.tsx` |
-| Successful mutation | `IncidentDetailPage.test.tsx` |
-| Failed mutation + error state | `IncidentDetailPage.test.tsx` |
-| Form validation | `IncidentCreatePage.test.tsx` |
+| Required case                       | Where                                               |
+| ----------------------------------- | --------------------------------------------------- |
+| List rendering                      | `IncidentTable.test.tsx`                            |
+| Search / filtering                  | `IncidentFilters.test.tsx`                          |
+| Successful mutation                 | `IncidentDetailPage.test.tsx`                       |
+| Failed mutation + error state       | `IncidentDetailPage.test.tsx`                       |
+| Form validation                     | `IncidentCreatePage.test.tsx`                       |
 | Accessibility-sensitive interaction | focus-to-first-invalid-field, plus keyboard sorting |
 
 Tests are co-located with what they test; `src/test/` holds only shared infrastructure.
@@ -387,18 +387,10 @@ coexisting with it.
 - **Deployment is manual.** `npm run deploy:push` then a version bump in
   `lightsail-deployment.json`. CI runs on every push; CD was left out because two remaining
   deploys don't justify the OIDC setup.
+- **Authentication and role-based access.** Out of scope per §11, so the current user is
+  simulated. With auth in place the natural next step is authorisation: an admin who can
+  assign and reassign any incident, and support or engineering roles scoped to the incidents
+  they own. That would be enforced server-side — the client would hide actions a role can't
+  perform, but hiding a button is presentation, not a permission check.
 - **Bulk actions, saved views, command palette, i18n, Storybook, error monitoring** — all
   deliberately out of scope.
-
----
-
-## Submission note
-
-**Most proud of:** every colour resolves through 22 semantic tokens, so adding dark mode was
-a CSS-only change — 19 overrides and not one component touched.
-
-**Largest compromise:** the mock API's in-memory store forced a single long-lived container
-rather than a proper split, so the frontend and API are co-hosted and data resets on
-redeploy.
-
-**With more time:** SSE instead of polling, and Playwright for the paths jsdom can't reach.
