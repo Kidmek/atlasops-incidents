@@ -375,22 +375,49 @@ coexisting with it.
 
 ---
 
+## Optional enhancements
+
+Implemented:
+
+- **Dark mode** — token overrides only, no component changes; contrast measured in
+  both themes.
+- **Real-time updates** — 30-second polling plus refetch-on-focus. Background tabs
+  don't poll.
+- **Offline awareness** — a banner driven by TanStack's own connectivity signal,
+  which already pauses and resumes requests.
+- **Docker support** — multi-stage build, 190 MB image.
+- **CI workflow** — client, server, and a Docker build job on every push.
+- **Performance measurements** — see §5.
+
+Not implemented deliberately:
+
+- **Virtualization** — 25 rows per page means the DOM never grows, so it would add a
+  dependency and scroll-restoration complexity to solve a problem that doesn't exist.\
+
+---
+
 ## 8. Incomplete Work
 
-- **Real-time updates.** `MOCK_API.md` §9 specifies an SSE endpoint; the server doesn't
-  implement it. 30-second polling plus refetch-on-focus stands in. SSE — not WebSocket, since
-  the data flows one way and `EventSource` reconnects natively — would be the next step.
-- **End-to-end tests.** Scoped with Playwright and set aside. The 12 component tests cover
-  behaviour; I'd add E2E for the deep-link, hard-refresh, and theme-persistence paths.
-- **Data resets on redeploy.** The in-memory store means an incident a reviewer creates
-  won't survive a restart. Correct for a mock; worth knowing before you look for it.
-- **Deployment is manual.** `npm run deploy:push` then a version bump in
-  `lightsail-deployment.json`. CI runs on every push; CD was left out because two remaining
-  deploys don't justify the OIDC setup.
-- **Authentication and role-based access.** Out of scope per §11, so the current user is
-  simulated. With auth in place the natural next step is authorisation: an admin who can
-  assign and reassign any incident, and support or engineering roles scoped to the incidents
-  they own. That would be enforced server-side — the client would hide actions a role can't
-  perform, but hiding a button is presentation, not a permission check.
-- **Bulk actions, saved views, command palette, i18n, Storybook, error monitoring** — all
-  deliberately out of scope.
+- **Data resets on redeploy.** The in-memory store means an incident a reviewer
+  creates won't survive a restart. Correct for a mock; worth knowing before you look
+  for it.
+- **Deployment is manual.** `npm run deploy:push`, then a version bump in
+  `lightsail-deployment.json`. CI runs on every push; CD was left out because two
+  remaining deploys don't justify the OIDC setup.
+- **Not verified with a screen reader.** Semantics were checked through role-based
+  queries and computed accessible names, not assistive technology.
+- **The 409 test can't isolate rollback from refetch.** Both produce the same visible
+  result; separating them would mean a timing race or asserting on cache internals.
+
+---
+
+## Submission note
+
+**Largest compromise:** the mock API's in-memory store forced a single long-lived container
+rather than a proper split, so the frontend and API are co-hosted and data resets on
+redeploy.
+
+**With more time:** SSE instead of polling, Playwright for the paths jsdom can't reach, and —
+if authentication were in scope — role-based access: an admin able to assign and reassign any
+incident, with support and engineering roles scoped to the incidents they own. Enforced
+server-side; hiding a button in the client is presentation, not a permission check.
